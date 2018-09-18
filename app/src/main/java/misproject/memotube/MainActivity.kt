@@ -25,6 +25,9 @@ import android.text.method.Touch.onTouchEvent
 import android.util.Log
 import android.text.method.Touch.onTouchEvent
 import android.view.View.OnTouchListener
+import com.simplify.ink.InkView
+
+
 
 
 
@@ -65,6 +68,8 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
     }
 
     private val TAG = "Debug"
+
+    private var isNoteMode = false
 
     private lateinit var player: SimpleExoPlayer
     private var playbackPosition = 0L
@@ -128,8 +133,17 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
             val pointerCount = event.pointerCount
             if (pointerCount > 1) { // pause with two finger pressed
                 player.setPlayWhenReady(false)
+                isNoteMode = true
+                textView.visibility = View.VISIBLE
             } else {
-            player.setPlayWhenReady(true)
+                if(isNoteMode == true) {
+                    player.setPlayWhenReady(true)   // shouldn't resume when it wasn't playing before TODO
+                    isNoteMode = false
+                    textView.visibility = View.INVISIBLE
+                    // save the memo TODO
+                    textView.clearCanvas()
+
+                }
             }
             false
         })

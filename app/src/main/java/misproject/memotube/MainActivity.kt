@@ -1,8 +1,11 @@
 package misproject.memotube
 
+import android.graphics.Rect
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.MediaSource
@@ -15,6 +18,16 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import kotlinx.android.synthetic.main.activity_main.*
+import android.view.GestureDetector.SimpleOnGestureListener
+import android.widget.Toast
+import android.text.method.Touch.onTouchEvent
+import android.text.method.Touch.onTouchEvent
+import android.util.Log
+import android.text.method.Touch.onTouchEvent
+import android.view.View.OnTouchListener
+
+
+
 
 class MainActivity : AppCompatActivity(), Player.EventListener {
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
@@ -51,6 +64,8 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
             progressBar.visibility = View.INVISIBLE
     }
 
+    private val TAG = "Debug"
+
     private lateinit var player: SimpleExoPlayer
     private var playbackPosition = 0L
     private val dashUrl = "http://rdmedia.bbc.co.uk/dash/ondemand/bbb/2/client_manifest-separate_init.mpd"
@@ -60,6 +75,9 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
     private val adaptiveTrackSelectionFactory by lazy {
         AdaptiveTrackSelection.Factory(bandwidthMeter)
     }
+//    private val gestureDetector by lazy {
+//        GestureDetector(this, TouchListener())
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,10 +114,33 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
         player.seekTo(playbackPosition)
         player.playWhenReady = true
         player.addListener(this)
+
+        addGestures()
     }
 
     private fun releasePlayer() {
         playbackPosition = player.getCurrentPosition()
         player.release()
     }
+
+    private fun addGestures () {
+        playerView.setOnTouchListener(OnTouchListener { _, event ->
+            val pointerCount = event.pointerCount
+            if (pointerCount > 1) { // pause with two finger pressed
+                player.setPlayWhenReady(false)
+            } else {
+            player.setPlayWhenReady(true)
+            }
+            false
+        })
+    }
+
+//    private inner class TouchListener : GestureDetector.SimpleOnGestureListener() {
+//
+//        override fun onSingleTapUp(e: MotionEvent): Boolean { //you can override onSingleTapConfirmed if you don't want doubleClick to fire it
+//            Log.d(TAG, "onSingleTapUp: TAP DETECTED") //logged only upon click
+//            return true
+//        }
+//
+//    }
 }

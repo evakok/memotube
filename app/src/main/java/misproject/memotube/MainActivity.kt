@@ -124,6 +124,7 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
         player.playWhenReady = true
         player.addListener(this)
 
+        bookmarks.visibility
         addGestures()
     }
 
@@ -148,6 +149,7 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
                 isNoteMode = true
                 drawView.visibility = View.VISIBLE
                 playerView.hideController()
+                bookmarks.visibility = View.INVISIBLE
             } else {
                 if(isNoteMode == true) {
                     if(wasPlaying)
@@ -160,6 +162,9 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
                         drawView.clearCanvas()
                     }
                 }
+                if(playerView.isControllerVisible)
+                    bookmarks.visibility = View.VISIBLE
+                else bookmarks.visibility = View.INVISIBLE
             }
             false
         })

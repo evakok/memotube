@@ -1,9 +1,11 @@
 package misproject.memotube
 
+import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -26,10 +28,8 @@ import android.util.Log
 import android.text.method.Touch.onTouchEvent
 import android.view.View.OnTouchListener
 import com.simplify.ink.InkView
-
-
-
-
+import java.io.File
+import java.io.FileOutputStream
 
 
 class MainActivity : AppCompatActivity(), Player.EventListener {
@@ -68,8 +68,12 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
     }
 
     private val TAG = "Debug"
+    private var videoTitle = "videoTitle"
+    private var timestamp: Long = 0
+    private lateinit var emptyBitmap : Bitmap
 
     private var isNoteMode = false
+    private var wasPlaying = true
 
     private lateinit var player: SimpleExoPlayer
     private var playbackPosition = 0L
@@ -132,21 +136,39 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
         playerView.setOnTouchListener(OnTouchListener { _, event ->
             val pointerCount = event.pointerCount
             if (pointerCount > 1) { // pause with two finger pressed
+                // prevent player to resume whlie it wasn't before
+                timestamp = player.getCurrentPosition()
+                if(!isNoteMode) {
+                    if (player.getPlayWhenReady())
+                        wasPlaying = true
+                    else wasPlaying = false
+                    emptyBitmap = drawView.getBitmap()  // to find out if the canvas is empty
+                }
                 player.setPlayWhenReady(false)
                 isNoteMode = true
-                textView.visibility = View.VISIBLE
+                drawView.visibility = View.VISIBLE
+                playerView.hideController()
             } else {
                 if(isNoteMode == true) {
-                    player.setPlayWhenReady(true)   // shouldn't resume when it wasn't playing before TODO
+                    if(wasPlaying)
+                        player.setPlayWhenReady(true)
                     isNoteMode = false
-                    textView.visibility = View.INVISIBLE
-                    // save the memo TODO
-                    textView.clearCanvas()
-
+                    drawView.visibility = View.INVISIBLE
+                    var bitmap = drawView.getBitmap()
+                    if(!bitmap.sameAs(emptyBitmap)) {
+                        saveBitmap(bitmap, timestamp)
+                        drawView.clearCanvas()
+                    }
                 }
             }
             false
         })
+    }
+
+    fun saveBitmap(bitmap: Bitmap, timestamp: Long) {
+        val fileName = "Memotube/" + videoTitle +  timestamp.toString() + ".png"
+        val file = File(Environment.getExternalStorageDirectory(), fileName)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(file))
     }
 
 //    private inner class TouchListener : GestureDetector.SimpleOnGestureListener() {

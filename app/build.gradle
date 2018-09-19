@@ -32,4 +32,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
     implementation 'com.simplify:ink:1.0.2'
+    implementation 'com.github.divyanshub024:AndroidDraw:v0.1'
 }

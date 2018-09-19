@@ -28,44 +28,13 @@ import android.util.Log
 import android.text.method.Touch.onTouchEvent
 import android.view.View.OnTouchListener
 import com.simplify.ink.InkView
+import kotlinx.android.synthetic.main.exo_controller.*
+import misproject.memotube.R.id.exo_progress
 import java.io.File
 import java.io.FileOutputStream
 
 
-class MainActivity : AppCompatActivity(), Player.EventListener {
-    override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
-    }
-
-    override fun onSeekProcessed() {
-    }
-
-    override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
-    }
-
-    override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
-    }
-
-    override fun onPlayerError(error: ExoPlaybackException?) {
-    }
-
-    override fun onLoadingChanged(isLoading: Boolean) {
-    }
-
-    override fun onPositionDiscontinuity(reason: Int) {
-    }
-
-    override fun onRepeatModeChanged(repeatMode: Int) {
-    }
-
-    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {
-    }
-
-    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-        if(playbackState == Player.STATE_BUFFERING)
-            progressBar.visibility = View.VISIBLE
-        else if(playbackState == Player.STATE_READY)
-            progressBar.visibility = View.INVISIBLE
-    }
+class MainActivity : AppCompatActivity() {
 
     private val TAG = "Debug"
     private var videoTitle = "videoTitle"
@@ -122,9 +91,9 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
         playerView.player = player
         player.seekTo(playbackPosition)
         player.playWhenReady = true
-        player.addListener(this)
 
-        bookmarks.visibility
+        exo_close.setOnClickListener(View.OnClickListener { this@MainActivity.finish() })
+
         addGestures()
     }
 
@@ -149,7 +118,6 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
                 isNoteMode = true
                 drawView.visibility = View.VISIBLE
                 playerView.hideController()
-                bookmarks.visibility = View.INVISIBLE
             } else {
                 if(isNoteMode == true) {
                     if(wasPlaying)
@@ -162,9 +130,6 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
                         drawView.clearCanvas()
                     }
                 }
-                if(playerView.isControllerVisible)
-                    bookmarks.visibility = View.VISIBLE
-                else bookmarks.visibility = View.INVISIBLE
             }
             false
         })

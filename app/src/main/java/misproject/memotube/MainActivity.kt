@@ -1,35 +1,22 @@
 package misproject.memotube
 
 import android.graphics.Bitmap
-import android.graphics.Rect
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.view.GestureDetector
-import android.view.MotionEvent
 import android.view.View
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import kotlinx.android.synthetic.main.activity_main.*
-import android.view.GestureDetector.SimpleOnGestureListener
-import android.widget.Toast
-import android.text.method.Touch.onTouchEvent
-import android.text.method.Touch.onTouchEvent
-import android.util.Log
-import android.text.method.Touch.onTouchEvent
 import android.view.View.OnTouchListener
-import com.simplify.ink.InkView
 import kotlinx.android.synthetic.main.exo_controller.*
-import misproject.memotube.R.id.exo_progress
 import java.io.File
 import java.io.FileOutputStream
 
@@ -106,9 +93,8 @@ class MainActivity : AppCompatActivity() {
         playerView.setOnTouchListener(OnTouchListener { _, event ->
             val pointerCount = event.pointerCount
             if (pointerCount > 1) { // pause with two finger pressed
-                // prevent player to resume whlie it wasn't before
                 timestamp = player.getCurrentPosition()
-                if(!isNoteMode) {
+                if(!isNoteMode) { // prevent player to resume whlie it wasn't before
                     if (player.getPlayWhenReady())
                         wasPlaying = true
                     else wasPlaying = false

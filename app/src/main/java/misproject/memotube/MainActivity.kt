@@ -19,7 +19,7 @@ class MainActivity: AppCompatActivity() {
 
         val DemoButton: Button = findViewById(R.id.scene2)
         DemoButton.setOnClickListener{
-            val intent = Intent(this, PlayActivity :: class.java)
+            val intent = Intent(this, VideoActivity :: class.java)
             startActivity(intent)
         }
 
@@ -42,7 +42,7 @@ class MainActivity: AppCompatActivity() {
             var videoUri: Uri? = null
             if (resultData != null) {
                 videoUri = resultData.data
-                val intent = Intent(this, PlayActivity :: class.java)
+                val intent = Intent(this, VideoActivity :: class.java)
                 startActivity(intent)
                 Log.i(FragmentActivity.STORAGE_SERVICE, "Uri: " + videoUri!!.toString())
             }

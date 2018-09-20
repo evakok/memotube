@@ -18,13 +18,13 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import android.view.View.OnTouchListener
-import kotlinx.android.synthetic.main.activity_play.*
+import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.exo_controller.*
 import java.io.File
 import java.io.FileOutputStream
 
 
-class PlayActivity : AppCompatActivity() {
+class VideoActivity : AppCompatActivity() {
 
     private lateinit var bookmarkDialog : Dialog
 
@@ -51,7 +51,7 @@ class PlayActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_play)
+        setContentView(R.layout.activity_video)
 
         bookmarkDialog = Dialog(this)
     }

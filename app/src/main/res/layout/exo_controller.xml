@@ -4,17 +4,17 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageButton
+    <Button
         android:id="@+id/exo_close"
         style="@style/ExoMediaButton"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:scaleType="fitCenter"
         android:layout_gravity="right"
         android:layout_marginTop = "10dp"
         android:layout_marginRight="10dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/bookmarks"
+        android:background="@drawable/bookmarkred"
+        android:alpha="0.8"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />

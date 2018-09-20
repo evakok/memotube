@@ -1,138 +1,52 @@
 package misproject.memotube
 
-import android.graphics.Bitmap
-import android.net.Uri
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
-import android.view.View
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.dash.DashMediaSource
-import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import kotlinx.android.synthetic.main.activity_main.*
-import android.view.View.OnTouchListener
-import kotlinx.android.synthetic.main.exo_controller.*
-import java.io.File
-import java.io.FileOutputStream
+import android.support.v7.app.AppCompatActivity
+import android.widget.Button
+import android.app.Activity
+import android.net.Uri
+import android.support.v4.app.FragmentActivity
+import android.util.Log
 
+class MainActivity: AppCompatActivity() {
 
-class MainActivity : AppCompatActivity() {
-
-    private val TAG = "Debug"
-    private var videoTitle = "videoTitle"
-    private var timestamp: Long = 0
-    private lateinit var emptyBitmap : Bitmap
-
-    private var isNoteMode = false
-    private var wasPlaying = true
-
-    private lateinit var player: SimpleExoPlayer
-    private var playbackPosition = 0L
-    private val dashUrl = "http://rdmedia.bbc.co.uk/dash/ondemand/bbb/2/client_manifest-separate_init.mpd"
-    private val bandwidthMeter by lazy {
-        DefaultBandwidthMeter()
-    }
-    private val adaptiveTrackSelectionFactory by lazy {
-        AdaptiveTrackSelection.Factory(bandwidthMeter)
-    }
-//    private val gestureDetector by lazy {
-//        GestureDetector(this, TouchListener())
-//    }
+    val READ_REQUEST_CODE = 42
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val DemoButton: Button = findViewById(R.id.scene2)
+        DemoButton.setOnClickListener{
+            val intent = Intent(this, PlayActivity :: class.java)
+            startActivity(intent)
+        }
+
+        val LocalButon: Button = findViewById(R.id.storage)
+        LocalButon.setOnClickListener{fileSearch()}
+
     }
 
-    override fun onStart() {
-        super.onStart()
-        initializePlayer()
+    fun fileSearch() {
+        val local_intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        local_intent.addCategory(Intent.CATEGORY_OPENABLE)
+        local_intent.type = "video/*"
+        startActivityForResult(local_intent, READ_REQUEST_CODE)
     }
 
-    override fun onStop() {
-        releasePlayer()
-        super.onStop()
-    }
+    public override fun onActivityResult(requestCode: Int, resultCode: Int,
+                                         resultData: Intent?) {
 
-    private fun buildMediaSource(uri: Uri): MediaSource {
-        val dataSourceFactory = DefaultHttpDataSourceFactory("ua", bandwidthMeter)
-        val dashChunkSourceFactory = DefaultDashChunkSource.Factory(dataSourceFactory)
-        return DashMediaSource(uri, dataSourceFactory, dashChunkSourceFactory, null, null)
-    }
-
-    private fun initializePlayer() {
-        player = ExoPlayerFactory.newSimpleInstance(
-                DefaultRenderersFactory(this),
-                DefaultTrackSelector(adaptiveTrackSelectionFactory),
-                DefaultLoadControl()
-        )
-        val uri = Uri.parse(dashUrl)
-        val mediaSource = buildMediaSource(uri)
-        player.prepare(mediaSource)
-
-        playerView.player = player
-        player.seekTo(playbackPosition)
-        player.playWhenReady = true
-
-        exo_close.setOnClickListener(View.OnClickListener { this@MainActivity.finish() })
-
-        addGestures()
-    }
-
-    private fun releasePlayer() {
-        playbackPosition = player.getCurrentPosition()
-        player.release()
-    }
-
-    private fun addGestures () {
-        playerView.setOnTouchListener(OnTouchListener { _, event ->
-            val pointerCount = event.pointerCount
-            if (pointerCount > 1) { // pause with two finger pressed
-                timestamp = player.getCurrentPosition()
-                if(!isNoteMode) { // prevent player to resume whlie it wasn't before
-                    if (player.getPlayWhenReady())
-                        wasPlaying = true
-                    else wasPlaying = false
-                    emptyBitmap = drawView.getBitmap()  // to find out if the canvas is empty
-                }
-                player.setPlayWhenReady(false)
-                isNoteMode = true
-                drawView.visibility = View.VISIBLE
-                playerView.hideController()
-            } else {
-                if(isNoteMode == true) {
-                    if(wasPlaying)
-                        player.setPlayWhenReady(true)
-                    isNoteMode = false
-                    drawView.visibility = View.INVISIBLE
-                    var bitmap = drawView.getBitmap()
-                    if(!bitmap.sameAs(emptyBitmap)) {
-                        saveBitmap(bitmap, timestamp)
-                        drawView.clearCanvas()
-                    }
-                }
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            var videoUri: Uri? = null
+            if (resultData != null) {
+                videoUri = resultData.data
+                val intent = Intent(this, PlayActivity :: class.java)
+                startActivity(intent)
+                Log.i(FragmentActivity.STORAGE_SERVICE, "Uri: " + videoUri!!.toString())
             }
-            false
-        })
+        }
     }
 
-    fun saveBitmap(bitmap: Bitmap, timestamp: Long) {
-        val fileName = "Memotube/" + videoTitle +  timestamp.toString() + ".png"
-        val file = File(Environment.getExternalStorageDirectory(), fileName)
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(file))
-    }
-
-//    private inner class TouchListener : GestureDetector.SimpleOnGestureListener() {
-//
-//        override fun onSingleTapUp(e: MotionEvent): Boolean { //you can override onSingleTapConfirmed if you don't want doubleClick to fire it
-//            Log.d(TAG, "onSingleTapUp: TAP DETECTED") //logged only upon click
-//            return true
-//        }
-//
-//    }
 }

@@ -15,17 +15,20 @@ import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import android.view.View.OnTouchListener
 import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.exo_controller.*
 import java.io.File
 import java.io.FileOutputStream
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.upstream.*
+import com.google.android.exoplayer2.util.Util
 
 
 class VideoActivity : AppCompatActivity() {
 
+    private var fileUri = "DEMO"
     private lateinit var bookmarkDialog : Dialog
 
     private val TAG = "Debug"
@@ -53,6 +56,10 @@ class VideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
 
+        // get video uri
+        val bundle = intent.extras
+        fileUri = bundle!!.getString("uri")
+
         bookmarkDialog = Dialog(this)
     }
 
@@ -72,15 +79,40 @@ class VideoActivity : AppCompatActivity() {
         return DashMediaSource(uri, dataSourceFactory, dashChunkSourceFactory, null, null)
     }
 
+    private fun buildMediaSourceLocal(uri: Uri): MediaSource {
+
+        val dataSpec = DataSpec(uri);
+        val fileDataSource = FileDataSource();
+        try {
+            fileDataSource.open(dataSpec);
+        } catch (e:FileDataSource.FileDataSourceException) {
+            e.printStackTrace();
+        }
+
+        val factory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "idontknow"), DefaultBandwidthMeter())
+
+        val videoSource = ExtractorMediaSource(uri,
+                factory, DefaultExtractorsFactory(), null, null);
+
+        return videoSource
+    }
+
     private fun initializePlayer() {
         player = ExoPlayerFactory.newSimpleInstance(
                 DefaultRenderersFactory(this),
                 DefaultTrackSelector(adaptiveTrackSelectionFactory),
                 DefaultLoadControl()
         )
-        val uri = Uri.parse(dashUrl)
-        val mediaSource = buildMediaSource(uri)
-        player.prepare(mediaSource)
+
+        if(fileUri == "DEMO") {
+            val uri = Uri.parse(dashUrl)
+            val mediaSource = buildMediaSource(uri)
+            player.prepare(mediaSource)
+        } else {
+            val uri = Uri.parse(fileUri)
+            val mediaSource = buildMediaSourceLocal(uri)
+            player.prepare(mediaSource)
+        }
 
         playerView.player = player
         player.seekTo(playbackPosition)

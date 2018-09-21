@@ -29,6 +29,22 @@
             android:background="#ccffffff"
             android:id="@+id/drawView"
             />
+
+        <ImageButton
+            android:id="@+id/edit_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginStart="20dp"
+            android:paddingBottom="16dp"
+            android:paddingEnd="12dp"
+            android:paddingStart="12dp"
+            android:paddingTop="16dp"
+            android:saveEnabled="false"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            android:scrollbarAlwaysDrawVerticalTrack="true" />
     </FrameLayout>
 
     <fragment

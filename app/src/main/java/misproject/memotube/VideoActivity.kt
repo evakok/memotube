@@ -1,9 +1,8 @@
 package misproject.memotube
 
-import android.app.Dialog
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +15,7 @@ import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import android.view.View.OnTouchListener
+import com.divyanshu.draw.activity.DrawingActivity
 import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.exo_controller.*
 import java.io.File
@@ -28,8 +28,8 @@ import com.google.android.exoplayer2.util.Util
 
 class VideoActivity : AppCompatActivity() {
 
+    private var bookmarkShown = false
     private var fileUri = "DEMO"
-    private lateinit var bookmarkDialog : Dialog
 
     private val TAG = "Debug"
     private var videoTitle = "videoTitle"
@@ -59,8 +59,6 @@ class VideoActivity : AppCompatActivity() {
         // get video uri
         val bundle = intent.extras
         fileUri = bundle!!.getString("uri")
-
-        bookmarkDialog = Dialog(this)
     }
 
     override fun onStart() {
@@ -119,7 +117,7 @@ class VideoActivity : AppCompatActivity() {
         player.playWhenReady = true
 
         exo_close.setOnClickListener(View.OnClickListener {
-            showBookmarks()
+            toggleBookmarks()
         })
 
         addGestures()
@@ -143,8 +141,10 @@ class VideoActivity : AppCompatActivity() {
                 }
                 player.setPlayWhenReady(false)
                 isNoteMode = true
+
                 drawView.visibility = View.VISIBLE
                 playerView.hideController()
+
             } else {
                 if(isNoteMode == true) {
                     if(wasPlaying)
@@ -168,16 +168,15 @@ class VideoActivity : AppCompatActivity() {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(file))
     }
 
-    fun showBookmarks() {
-        bookmarkDialog.setContentView(R.layout.bookmark)
-
-        val closeBtn = bookmarkDialog.findViewById<View>((R.id.bookmark_close))
-        closeBtn.setOnClickListener {
-            bookmarkDialog.dismiss()
+    fun toggleBookmarks() {
+        if(bookmarkShown) {
+            exo_close.setBackgroundResource(R.drawable.bookmarkwhite)
+            exo_close.setAlpha(0.8F)
+        } else {
+            exo_close.setBackgroundResource(R.drawable.bookmarkred)
+            exo_close.setAlpha(1.0F)
         }
-
-        bookmarkDialog.getWindow().setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-        bookmarkDialog.show()
+        bookmarkShown = !bookmarkShown
     }
 
 //    private inner class TouchListener : GestureDetector.SimpleOnGestureListener() {

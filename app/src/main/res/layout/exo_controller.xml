@@ -13,8 +13,8 @@
         android:layout_gravity="right"
         android:layout_marginTop = "10dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/bookmarkred"
-        android:alpha="0.8"
+        android:background="@drawable/bookmarkwhite"
+        android:alpha = "0.8"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />

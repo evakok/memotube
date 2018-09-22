@@ -112,8 +112,6 @@ class BookmarkFragment : Fragment() {
             thumbnail.setImageBitmap(BitmapFactory.decodeFile(memo.imgFile))
 
             return view
-
-            //refresh adapter when data changed TODO
         }
     }
 

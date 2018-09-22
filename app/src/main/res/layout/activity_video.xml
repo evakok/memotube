@@ -30,6 +30,13 @@
             android:id="@+id/drawView"
             />
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:visibility="invisible"
+            android:id="@+id/bookmarkView"/>
+
         <ImageButton
             android:id="@+id/edit_btn"
             android:layout_width="50dp"
@@ -45,11 +52,23 @@
             android:scaleY="1.5"
             android:scrollbarAlwaysDrawHorizontalTrack="false"
             android:scrollbarAlwaysDrawVerticalTrack="true" />
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/bookmarkClose"
+            android:scaleType="fitCenter"
+            android:layout_marginTop = "20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/close"
+            android:alpha = "0.8"
+            android:visibility="invisible" />
+
     </FrameLayout>
 
     <fragment
         android:id="@+id/drawer"
-        android:layout_width="500dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:name="misproject.memotube.BookmarkFragment"

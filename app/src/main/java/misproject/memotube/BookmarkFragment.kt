@@ -23,8 +23,7 @@ class BookmarkFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        //TODO
-        // when item clicked - overlay on top of the video (reposition the video play position)
+
         val view: View = inflater!!.inflate(R.layout.activity_drawer, container, false)
         listView = view.findViewById(R.id.bookmarkList) as ListView
 
@@ -85,17 +84,14 @@ class BookmarkFragment : Fragment() {
             return memosList.size
         }
 
-        //2
         override fun getItem(position: Int): Any {
             return memosList[position]
         }
 
-        //3
         override fun getItemId(position: Int): Long {
             return position.toLong()
         }
 
-        //4
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
             // Get view for row item
@@ -113,6 +109,7 @@ class BookmarkFragment : Fragment() {
 
             return view
         }
+
     }
 
     fun updateListview() {
@@ -123,5 +120,17 @@ class BookmarkFragment : Fragment() {
 
         adapter = MemoAdapter(this.activity!!, listMemos)
         listView.adapter = adapter
+    }
+
+    fun getListView() : ListView {
+        return listView
+    }
+
+    fun getPlaybackPosition(position: Int): Long? {
+        return listMemos[position].position
+    }
+
+    fun getImgFilePath(position: Int): String? {
+        return listMemos[position].imgFile
     }
 }

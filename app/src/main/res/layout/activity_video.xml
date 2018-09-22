@@ -30,21 +30,33 @@
             android:id="@+id/drawView"
             />
 
-        <ImageButton
-            android:id="@+id/edit_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginStart="20dp"
-            android:paddingBottom="16dp"
-            android:paddingEnd="12dp"
-            android:paddingStart="12dp"
-            android:paddingTop="16dp"
-            android:saveEnabled="false"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
-            android:scrollbarAlwaysDrawHorizontalTrack="false"
-            android:scrollbarAlwaysDrawVerticalTrack="true" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/edit_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="right"
+                android:alpha="0.6"
+                android:background="@drawable/pencil"
+                android:visibility="invisible"
+                tools:layout_editor_absoluteX="298dp"
+                tools:layout_editor_absoluteY="16dp" />
+
+            <include
+                android:id="@+id/edit"
+                layout="@layout/editor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:layout_editor_absoluteY="86dp" />
+
+        </android.support.constraint.ConstraintLayout>
+
     </FrameLayout>
 
     <fragment

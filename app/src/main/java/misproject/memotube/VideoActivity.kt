@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import android.view.View.OnTouchListener
+import android.widget.SeekBar
 import com.divyanshu.draw.activity.DrawingActivity
 import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.exo_controller.*
@@ -24,8 +25,12 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.upstream.*
 import com.google.android.exoplayer2.util.Util
+import kotlinx.android.synthetic.main.editor.*
+import kotlinx.android.synthetic.main.editor_palette.*
+import misproject.memotube.R.color.*
 
 
+@Suppress("DEPRECATION")
 class VideoActivity : AppCompatActivity() {
 
     private var bookmarkShown = false
@@ -48,6 +53,12 @@ class VideoActivity : AppCompatActivity() {
     private val adaptiveTrackSelectionFactory by lazy {
         AdaptiveTrackSelection.Factory(bandwidthMeter)
     }
+
+    private val black = color_black
+    private val red = color_red
+    private val green = color_green
+    private val yellow = color_yellow
+    private val blue = color_blue
 //    private val gestureDetector by lazy {
 //        GestureDetector(this, TouchListener())
 //    }
@@ -116,10 +127,6 @@ class VideoActivity : AppCompatActivity() {
         player.seekTo(playbackPosition)
         player.playWhenReady = true
 
-        exo_close.setOnClickListener(View.OnClickListener {
-            toggleBookmarks()
-        })
-
         addGestures()
     }
 
@@ -145,12 +152,55 @@ class VideoActivity : AppCompatActivity() {
                 drawView.visibility = View.VISIBLE
                 playerView.hideController()
 
+                edit_btn.visibility = View.VISIBLE
+                edit.visibility = View.VISIBLE
+                edit_btn.setOnClickListener {
+                    width_editor.visibility = View.VISIBLE
+                    color_editor.visibility = View.VISIBLE
+                    btn_black.visibility = View.VISIBLE
+                    btn_red.visibility = View.VISIBLE
+                    btn_yellow.visibility = View.VISIBLE
+                    btn_blue.visibility = View.VISIBLE
+                    btn_green.visibility = View.VISIBLE
+
+                    btn_black.setOnClickListener {
+                        drawView.setColor(black)
+                    }
+                    btn_red.setOnClickListener {
+                        drawView.setColor(red)
+                    }
+                    btn_blue.setOnClickListener {
+                        drawView.setColor(blue)
+                    }
+                    btn_green.setOnClickListener {
+                        drawView.setColor(green)
+                    }
+                    btn_yellow.setOnClickListener {
+                        drawView.setColor(yellow)
+                    }
+                    seekBar_width.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+                        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                            drawView.setStrokeWidth(progress.toFloat())
+                        }
+                        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                    })
+                }
             } else {
                 if(isNoteMode == true) {
                     if(wasPlaying)
                         player.setPlayWhenReady(true)
                     isNoteMode = false
                     drawView.visibility = View.INVISIBLE
+                    edit_btn.visibility = View.INVISIBLE
+                    edit.visibility = View.INVISIBLE
+                    width_editor.visibility = View.INVISIBLE
+                    btn_black.visibility = View.INVISIBLE
+                    btn_red.visibility = View.INVISIBLE
+                    btn_yellow.visibility = View.INVISIBLE
+                    btn_blue.visibility = View.INVISIBLE
+                    btn_green.visibility = View.INVISIBLE
                     var bitmap = drawView.getBitmap()
                     if(!bitmap.sameAs(emptyBitmap)) {
                         saveBitmap(bitmap, timestamp)
@@ -166,17 +216,6 @@ class VideoActivity : AppCompatActivity() {
         val fileName = "Memotube/" + videoTitle +  timestamp.toString() + ".png"
         val file = File(Environment.getExternalStorageDirectory(), fileName)
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(file))
-    }
-
-    fun toggleBookmarks() {
-        if(bookmarkShown) {
-            exo_close.setBackgroundResource(R.drawable.bookmarkwhite)
-            exo_close.setAlpha(0.8F)
-        } else {
-            exo_close.setBackgroundResource(R.drawable.bookmarkred)
-            exo_close.setAlpha(1.0F)
-        }
-        bookmarkShown = !bookmarkShown
     }
 
 //    private inner class TouchListener : GestureDetector.SimpleOnGestureListener() {

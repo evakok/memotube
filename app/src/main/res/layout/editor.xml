@@ -4,44 +4,24 @@
     android:id="@+id/draw_tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffffffff"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/width_editor"
+        android:id="@+id/editor_palette"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@id/edit_btn">
-
-        <ImageView
-            android:id="@+id/image_draw_width"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:padding="16dp"
-            android:src="@drawable/ic_adjust_black_24dp"
-            android:tint="@color/icon_color"
-            app:layout_constraintEnd_toStartOf="@id/seekBar_width"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
         <SeekBar
             android:id="@+id/seekBar_width"
             android:layout_width="200dp"
-            android:layout_height="56dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:progress="8"
-            app:layout_constraintStart_toEndOf="@id/image_draw_width" />
-
-        <include
-            android:id="@+id/color_editor"
-            layout="@layout/editor_palette"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>

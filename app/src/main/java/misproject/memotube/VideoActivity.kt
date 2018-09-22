@@ -7,6 +7,7 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.support.v4.content.res.ResourcesCompat
 import android.view.View
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.MediaSource
@@ -153,39 +154,44 @@ class VideoActivity : AppCompatActivity() {
                 playerView.hideController()
 
                 edit_btn.visibility = View.VISIBLE
-                edit.visibility = View.VISIBLE
                 edit_btn.setOnClickListener {
-                    width_editor.visibility = View.VISIBLE
-                    color_editor.visibility = View.VISIBLE
-                    btn_black.visibility = View.VISIBLE
-                    btn_red.visibility = View.VISIBLE
-                    btn_yellow.visibility = View.VISIBLE
-                    btn_blue.visibility = View.VISIBLE
-                    btn_green.visibility = View.VISIBLE
+                    if (edit.visibility == View.VISIBLE && color_editor.visibility == View.VISIBLE ) {
+                        edit.visibility = View.INVISIBLE
+                        color_editor.visibility = View.INVISIBLE
+                    }
+                    else {
+                        edit.visibility = View.VISIBLE
+                        color_editor.visibility = View.VISIBLE
 
-                    btn_black.setOnClickListener {
-                        drawView.setColor(black)
-                    }
-                    btn_red.setOnClickListener {
-                        drawView.setColor(red)
-                    }
-                    btn_blue.setOnClickListener {
-                        drawView.setColor(blue)
-                    }
-                    btn_green.setOnClickListener {
-                        drawView.setColor(green)
-                    }
-                    btn_yellow.setOnClickListener {
-                        drawView.setColor(yellow)
-                    }
-                    seekBar_width.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
-                        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                            drawView.setStrokeWidth(progress.toFloat())
+                        btn_black.setOnClickListener {
+                            drawView.setColor(black)
                         }
-                        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                        btn_red.setOnClickListener {
+                            val color = ResourcesCompat.getColor(resources, R.color.color_red, null)
+                            drawView.setColor(color)
+                        }
+                        btn_blue.setOnClickListener {
+                            val color = ResourcesCompat.getColor(resources, R.color.color_blue, null)
+                            drawView.setColor(color)
+                        }
+                        btn_green.setOnClickListener {
+                            val color = ResourcesCompat.getColor(resources, R.color.color_green, null)
+                            drawView.setColor(color)
+                        }
+                        btn_yellow.setOnClickListener {
+                            val color = ResourcesCompat.getColor(resources, R.color.color_yellow, null)
+                            drawView.setColor(color)
+                        }
+                        seekBar_width.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                                drawView.setStrokeWidth(progress.toFloat())
+                            }
 
-                        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-                    })
+                            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                        })
+                    }
                 }
             } else {
                 if(isNoteMode == true) {
@@ -195,12 +201,7 @@ class VideoActivity : AppCompatActivity() {
                     drawView.visibility = View.INVISIBLE
                     edit_btn.visibility = View.INVISIBLE
                     edit.visibility = View.INVISIBLE
-                    width_editor.visibility = View.INVISIBLE
-                    btn_black.visibility = View.INVISIBLE
-                    btn_red.visibility = View.INVISIBLE
-                    btn_yellow.visibility = View.INVISIBLE
-                    btn_blue.visibility = View.INVISIBLE
-                    btn_green.visibility = View.INVISIBLE
+                    color_editor.visibility = View.INVISIBLE
                     var bitmap = drawView.getBitmap()
                     if(!bitmap.sameAs(emptyBitmap)) {
                         saveBitmap(bitmap, timestamp)

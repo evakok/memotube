@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.support.v4.content.res.ResourcesCompat
 import android.view.View
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.MediaSource
@@ -16,6 +17,8 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import android.view.View.OnTouchListener
 import android.widget.ListView
+import android.widget.SeekBar
+import com.divyanshu.draw.activity.DrawingActivity
 import kotlinx.android.synthetic.main.activity_video.*
 import java.io.File
 import java.io.FileOutputStream
@@ -23,8 +26,12 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.upstream.*
 import com.google.android.exoplayer2.util.Util
+import kotlinx.android.synthetic.main.editor.*
+import kotlinx.android.synthetic.main.editor_palette.*
+import misproject.memotube.R.color.*
 
 
+@Suppress("DEPRECATION")
 class VideoActivity : AppCompatActivity() {
 
     private lateinit var listView : ListView
@@ -49,6 +56,8 @@ class VideoActivity : AppCompatActivity() {
     private val adaptiveTrackSelectionFactory by lazy {
         AdaptiveTrackSelection.Factory(bandwidthMeter)
     }
+
+    private val black = color_black
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -162,12 +171,55 @@ class VideoActivity : AppCompatActivity() {
                 drawView.visibility = View.VISIBLE
                 playerView.hideController()
 
+                edit_btn.visibility = View.VISIBLE
+                edit_btn.setOnClickListener {
+                    if (edit.visibility == View.VISIBLE && color_editor.visibility == View.VISIBLE ) {
+                        edit.visibility = View.INVISIBLE
+                        color_editor.visibility = View.INVISIBLE
+                    }
+                    else {
+                        edit.visibility = View.VISIBLE
+                        color_editor.visibility = View.VISIBLE
+
+                        btn_black.setOnClickListener {
+                            drawView.setColor(black)
+                        }
+                        btn_red.setOnClickListener {
+                            val color = ResourcesCompat.getColor(resources, R.color.color_red, null)
+                            drawView.setColor(color)
+                        }
+                        btn_blue.setOnClickListener {
+                            val color = ResourcesCompat.getColor(resources, R.color.color_blue, null)
+                            drawView.setColor(color)
+                        }
+                        btn_green.setOnClickListener {
+                            val color = ResourcesCompat.getColor(resources, R.color.color_green, null)
+                            drawView.setColor(color)
+                        }
+                        btn_yellow.setOnClickListener {
+                            val color = ResourcesCompat.getColor(resources, R.color.color_yellow, null)
+                            drawView.setColor(color)
+                        }
+                        seekBar_width.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                                drawView.setStrokeWidth(progress.toFloat())
+                            }
+
+                            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                        })
+                    }
+                }
             } else {
                 if(isNoteMode == true) {
                     if(wasPlaying)
                         player.setPlayWhenReady(true)
                     isNoteMode = false
                     drawView.visibility = View.INVISIBLE
+                    edit_btn.visibility = View.INVISIBLE
+                    edit.visibility = View.INVISIBLE
+                    color_editor.visibility = View.INVISIBLE
                     var bitmap = drawView.getBitmap()
                     if(!bitmap.sameAs(emptyBitmap)) {
                         saveBitmap(bitmap, timestamp)

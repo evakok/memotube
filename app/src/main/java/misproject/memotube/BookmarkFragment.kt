@@ -14,23 +14,18 @@ import java.util.*
 
 class BookmarkFragment : Fragment() {
 
-    private var videoTitle = "videoTitle"   // get video title from videoactivity TODO
+    private var videoTitle = "DEMO"
 
     private var listMemos = ArrayList<Memo>()
     private lateinit var listView : ListView
 
+    private lateinit var adapter: MemoAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
         val view: View = inflater!!.inflate(R.layout.activity_drawer, container, false)
-
-        addMemoItems()
-
-        val adapter = MemoAdapter(this.activity!!, listMemos)
         listView = view.findViewById(R.id.bookmarkList) as ListView
-        listView.adapter = adapter
-
-        //TODO
-        // when item clicked - overlay on top of the video (reposition the video play position)
 
         return view
     }
@@ -89,18 +84,16 @@ class BookmarkFragment : Fragment() {
             return memosList.size
         }
 
-        //2
         override fun getItem(position: Int): Any {
             return memosList[position]
         }
 
-        //3
         override fun getItemId(position: Int): Long {
             return position.toLong()
         }
 
-        //4
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+
             // Get view for row item
             val view: View = inflater!!.inflate(R.layout.list_memo, parent, false)
 
@@ -115,8 +108,29 @@ class BookmarkFragment : Fragment() {
             thumbnail.setImageBitmap(BitmapFactory.decodeFile(memo.imgFile))
 
             return view
-
-            //refresh adapter when data changed TODO
         }
+
+    }
+
+    fun updateListview() {
+
+        videoTitle = getArguments()!!.getString("title")
+        listMemos.clear()
+        addMemoItems()
+
+        adapter = MemoAdapter(this.activity!!, listMemos)
+        listView.adapter = adapter
+    }
+
+    fun getListView() : ListView {
+        return listView
+    }
+
+    fun getPlaybackPosition(position: Int): Long? {
+        return listMemos[position].position
+    }
+
+    fun getImgFilePath(position: Int): String? {
+        return listMemos[position].imgFile
     }
 }

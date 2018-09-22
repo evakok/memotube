@@ -1,12 +1,12 @@
 package misproject.memotube
 
-import android.app.Activity
-import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.support.v4.content.res.ResourcesCompat
 import android.view.View
 import com.google.android.exoplayer2.*
@@ -16,10 +16,10 @@ import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import android.view.View.OnTouchListener
+import android.widget.ListView
 import android.widget.SeekBar
 import com.divyanshu.draw.activity.DrawingActivity
 import kotlinx.android.synthetic.main.activity_video.*
-import kotlinx.android.synthetic.main.exo_controller.*
 import java.io.File
 import java.io.FileOutputStream
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -34,11 +34,13 @@ import misproject.memotube.R.color.*
 @Suppress("DEPRECATION")
 class VideoActivity : AppCompatActivity() {
 
+    private lateinit var listView : ListView
+    private lateinit var fragment : BookmarkFragment
     private var bookmarkShown = false
     private var fileUri = "DEMO"
 
     private val TAG = "Debug"
-    private var videoTitle = "videoTitle"
+    private var videoTitle = "DEMO"
     private var timestamp: Long = 0
     private lateinit var emptyBitmap : Bitmap
 
@@ -56,21 +58,37 @@ class VideoActivity : AppCompatActivity() {
     }
 
     private val black = color_black
-    private val red = color_red
-    private val green = color_green
-    private val yellow = color_yellow
-    private val blue = color_blue
-//    private val gestureDetector by lazy {
-//        GestureDetector(this, TouchListener())
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
 
+        val storageDir = File(Environment.getExternalStorageDirectory(), "Memotube")
+        if (!storageDir.exists()) {
+            if (!storageDir.mkdirs()) {
+                Log.e("VideoActivity", "Failed to create directory")
+            }
+        }
+
         // get video uri
         val bundle = intent.extras
         fileUri = bundle!!.getString("uri")
+        videoTitle = bundle!!.getString("title")
+        val fm = supportFragmentManager
+
+        //if you added fragment via layout xml
+        fragment = fm.findFragmentById(R.id.drawer) as BookmarkFragment
+        fragment.setArguments(bundle)
+        fragment.updateListview()
+        listView = fragment.getListView()
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            playerView.useController = false
+            val posToShow = fragment.getPlaybackPosition(position) as Long
+            val imgToShow = fragment.getImgFilePath(position) as String
+            playActivity.closeDrawers()
+            showBookmark(posToShow, imgToShow)
+        }
     }
 
     override fun onStart() {
@@ -206,6 +224,7 @@ class VideoActivity : AppCompatActivity() {
                     if(!bitmap.sameAs(emptyBitmap)) {
                         saveBitmap(bitmap, timestamp)
                         drawView.clearCanvas()
+                        fragment.updateListview()
                     }
                 }
             }
@@ -219,12 +238,17 @@ class VideoActivity : AppCompatActivity() {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(file))
     }
 
-//    private inner class TouchListener : GestureDetector.SimpleOnGestureListener() {
-//
-//        override fun onSingleTapUp(e: MotionEvent): Boolean { //you can override onSingleTapConfirmed if you don't want doubleClick to fire it
-//            Log.d(TAG, "onSingleTapUp: TAP DETECTED") //logged only upon click
-//            return true
-//        }
-//
-//    }
+    fun showBookmark(pos: Long, path: String) {
+        player.setPlayWhenReady(false)
+        player.seekTo(pos)
+        bookmarkView.setImageBitmap(BitmapFactory.decodeFile(path))
+        bookmarkView.visibility=View.VISIBLE
+        bookmarkClose.visibility=View.VISIBLE
+        bookmarkClose.setOnClickListener(View.OnClickListener {
+            bookmarkView.visibility=View.INVISIBLE
+            bookmarkClose.visibility=View.INVISIBLE
+            playerView.useController = true
+        })
+    }
+
 }

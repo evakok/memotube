@@ -1,7 +1,5 @@
 package misproject.memotube
 
-import android.app.Activity
-import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
@@ -15,7 +13,6 @@ import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import android.view.View.OnTouchListener
-import com.divyanshu.draw.activity.DrawingActivity
 import kotlinx.android.synthetic.main.activity_video.*
 import kotlinx.android.synthetic.main.exo_controller.*
 import java.io.File
@@ -28,11 +25,12 @@ import com.google.android.exoplayer2.util.Util
 
 class VideoActivity : AppCompatActivity() {
 
+    private lateinit var fragment : BookmarkFragment
     private var bookmarkShown = false
     private var fileUri = "DEMO"
 
     private val TAG = "Debug"
-    private var videoTitle = "videoTitle"
+    private var videoTitle = "DEMO"
     private var timestamp: Long = 0
     private lateinit var emptyBitmap : Bitmap
 
@@ -48,9 +46,6 @@ class VideoActivity : AppCompatActivity() {
     private val adaptiveTrackSelectionFactory by lazy {
         AdaptiveTrackSelection.Factory(bandwidthMeter)
     }
-//    private val gestureDetector by lazy {
-//        GestureDetector(this, TouchListener())
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +54,13 @@ class VideoActivity : AppCompatActivity() {
         // get video uri
         val bundle = intent.extras
         fileUri = bundle!!.getString("uri")
+        videoTitle = bundle!!.getString("title")
+        val fm = supportFragmentManager
+
+        //if you added fragment via layout xml
+        fragment = fm.findFragmentById(R.id.drawer) as BookmarkFragment
+        fragment.setArguments(bundle)
+        fragment.updateListview()
     }
 
     override fun onStart() {
@@ -155,6 +157,7 @@ class VideoActivity : AppCompatActivity() {
                     if(!bitmap.sameAs(emptyBitmap)) {
                         saveBitmap(bitmap, timestamp)
                         drawView.clearCanvas()
+                        fragment.updateListview()
                     }
                 }
             }
@@ -179,12 +182,4 @@ class VideoActivity : AppCompatActivity() {
         bookmarkShown = !bookmarkShown
     }
 
-//    private inner class TouchListener : GestureDetector.SimpleOnGestureListener() {
-//
-//        override fun onSingleTapUp(e: MotionEvent): Boolean { //you can override onSingleTapConfirmed if you don't want doubleClick to fire it
-//            Log.d(TAG, "onSingleTapUp: TAP DETECTED") //logged only upon click
-//            return true
-//        }
-//
-//    }
 }

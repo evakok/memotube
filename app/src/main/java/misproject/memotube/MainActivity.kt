@@ -8,6 +8,7 @@ import android.app.Activity
 import android.net.Uri
 import android.support.v4.app.FragmentActivity
 import android.util.Log
+import android.provider.OpenableColumns
 
 class MainActivity: AppCompatActivity() {
 
@@ -21,6 +22,7 @@ class MainActivity: AppCompatActivity() {
         DemoButton.setOnClickListener{
             val intent = Intent(this, VideoActivity :: class.java)
             intent.putExtra("uri", "DEMO")
+            intent.putExtra("title", "DEMO")
             startActivity(intent)
         }
 
@@ -45,11 +47,36 @@ class MainActivity: AppCompatActivity() {
                 videoUri = resultData.data
                 val intent = Intent(this, VideoActivity :: class.java)
                 val uri = videoUri.toString()
+                val fullTitle = getFileName(videoUri)
+                val title = fullTitle.removeRange(fullTitle.lastIndexOf('.'), fullTitle.length)
                 intent.putExtra("uri", uri)
+                intent.putExtra("title", title)
                 startActivity(intent)
                 Log.i(FragmentActivity.STORAGE_SERVICE, "Uri: " + videoUri!!.toString())
             }
         }
     }
 
+    // Source: https://developer.android.com/guide/topics/providers/document-provider
+    fun getFileName(uri: Uri): String {
+        var result: String? = null
+        if (uri.scheme == "content") {
+            val cursor = contentResolver.query(uri, null, null, null, null)
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                }
+            } finally {
+                cursor!!.close()
+            }
+        }
+        if (result == null) {
+            result = uri.path
+            val cut = result!!.lastIndexOf('/')
+            if (cut != -1) {
+                result = result.substring(cut + 1)
+            }
+        }
+        return result
+    }
 }

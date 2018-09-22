@@ -14,23 +14,19 @@ import java.util.*
 
 class BookmarkFragment : Fragment() {
 
-    private var videoTitle = "videoTitle"   // get video title from videoactivity TODO
+    private var videoTitle = "DEMO"
 
     private var listMemos = ArrayList<Memo>()
     private lateinit var listView : ListView
 
+    private lateinit var adapter: MemoAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view: View = inflater!!.inflate(R.layout.activity_drawer, container, false)
-
-        addMemoItems()
-
-        val adapter = MemoAdapter(this.activity!!, listMemos)
-        listView = view.findViewById(R.id.bookmarkList) as ListView
-        listView.adapter = adapter
-
         //TODO
         // when item clicked - overlay on top of the video (reposition the video play position)
+        val view: View = inflater!!.inflate(R.layout.activity_drawer, container, false)
+        listView = view.findViewById(R.id.bookmarkList) as ListView
 
         return view
     }
@@ -101,6 +97,7 @@ class BookmarkFragment : Fragment() {
 
         //4
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+
             // Get view for row item
             val view: View = inflater!!.inflate(R.layout.list_memo, parent, false)
 
@@ -118,5 +115,15 @@ class BookmarkFragment : Fragment() {
 
             //refresh adapter when data changed TODO
         }
+    }
+
+    fun updateListview() {
+
+        videoTitle = getArguments()!!.getString("title")
+        listMemos.clear()
+        addMemoItems()
+
+        adapter = MemoAdapter(this.activity!!, listMemos)
+        listView.adapter = adapter
     }
 }

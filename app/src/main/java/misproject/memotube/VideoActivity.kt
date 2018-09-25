@@ -15,10 +15,8 @@ import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import android.view.View.OnTouchListener
 import android.widget.ListView
 import android.widget.SeekBar
-import com.divyanshu.draw.activity.DrawingActivity
 import kotlinx.android.synthetic.main.activity_video.*
 import java.io.File
 import java.io.FileOutputStream
@@ -28,7 +26,6 @@ import com.google.android.exoplayer2.upstream.*
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.editor.*
 import kotlinx.android.synthetic.main.editor_palette.*
-import misproject.memotube.R.color.*
 
 
 @Suppress("DEPRECATION")
@@ -56,8 +53,6 @@ class VideoActivity : AppCompatActivity() {
     private val adaptiveTrackSelectionFactory by lazy {
         AdaptiveTrackSelection.Factory(bandwidthMeter)
     }
-
-    private val black = color_black
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -155,7 +150,7 @@ class VideoActivity : AppCompatActivity() {
     }
 
     private fun addGestures () {
-        playerView.setOnTouchListener(OnTouchListener { _, event ->
+        playerView.setOnTouchListener({ _, event ->
             val pointerCount = event.pointerCount
             if (pointerCount > 1) { // pause with two finger pressed
                 timestamp = player.getCurrentPosition()
@@ -182,7 +177,8 @@ class VideoActivity : AppCompatActivity() {
                         color_editor.visibility = View.VISIBLE
 
                         btn_black.setOnClickListener {
-                            drawView.setColor(black)
+                            val color = ResourcesCompat.getColor(resources, R.color.color_black, null)
+                            drawView.setColor(color)
                         }
                         btn_red.setOnClickListener {
                             val color = ResourcesCompat.getColor(resources, R.color.color_red, null)
@@ -204,7 +200,6 @@ class VideoActivity : AppCompatActivity() {
                             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                                 drawView.setStrokeWidth(progress.toFloat())
                             }
-
                             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
                             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -244,11 +239,10 @@ class VideoActivity : AppCompatActivity() {
         bookmarkView.setImageBitmap(BitmapFactory.decodeFile(path))
         bookmarkView.visibility=View.VISIBLE
         bookmarkClose.visibility=View.VISIBLE
-        bookmarkClose.setOnClickListener(View.OnClickListener {
+        bookmarkClose.setOnClickListener({
             bookmarkView.visibility=View.INVISIBLE
             bookmarkClose.visibility=View.INVISIBLE
             playerView.useController = true
         })
     }
-
 }

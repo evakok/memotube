@@ -1,14 +1,30 @@
 # MemoTube
-MemoTube is a video player app that allows users to take notes while they are watching a video. Users can watch a video from their tablet or phone and take a note over it with transient gestures. When the user put down two fingers the note session begins and the video is paused. There is a change at the opacity of the view to be easier to take the note. When the user lift off the fingers the note is saved as a bookmark and the video starts to play again. At the bookmark menu they can view all the notes they have take for the playing video and if they click on one of them they can show it on top of the video. Also, users have the ability to change the color and the width of their pen during their writing. 
+MemoTube is a video player app that allows users to take notes while they are watching a video.
+It works on Android version 4.4 (Kitkat) or above. It was designed for and tested on 9.6 inch tablet(Samsung Galaxy Tab E SM-T560).
+
+# How to use
+Install with APK file. Upon opening, first choose a video file to play. You can either select what is stored on the device, or simply select the demo video. Make sure the device is connected to the internet to play the demo.
+
+To start the note-taking mode, place your two non-dominant fingers on the screen.
+
+Use your dominant finger to take notes. The memo will be saved to 'Memotube' folder after you lift off the all fingers. The folder is placed on the root of your device storage.
+
+Click the pencil button to change the color or width of the pen.
+
+Slide from the left to open the bookmark list.
+
+Click on one bookmark item to view the memo on top of the video.
 
 ### Team members:
 * Hiyeon Kim - 118654
 * Evangelia Eirini Koktsidou - 118884
 
 ## Credits
-Icons for markers where taken from [Flaticon](www.flaticon.com) and are all [licensed by](http://creativecommons.org/licenses/by/3.0/) Creative Commons BY 3.0 
+Button icons were taken from [Flaticon](www.flaticon.com) and are all licensed by [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
 
-* [Edit button](https://www.flaticon.com/authors/chanut) - Icons made by Chanut
+* Folder, Exit - made by [Smashicons](https://www.flaticon.com/authors/smashicons)
+* Bunny - made by [Freepik](http://www.freepik.com)
+* Edit - made by [Chanut](https://www.flaticon.com/authors/chanut)
 
 ## Attribution
 * [ExoPlayer](https://google.github.io/ExoPlayer/) - [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)

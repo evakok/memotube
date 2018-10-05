@@ -7,19 +7,19 @@ Install with APK file. Upon opening, first choose a video file to play. You can 
 
 To start the note-taking mode, place your two non-dominant fingers on the screen.
 ![Two Fingers](images/twoFingers.png)
-![Note Taking Mode](https://raw.githubusercontent.com/evakok/memotube/edit/Final/images/noteTaking.png)
+![Note Taking Mode](images/noteTaking.png)
 
 Use your dominant finger to take notes. The memo will be saved to 'Memotube' folder after you lift off the all fingers. The folder is placed on the root of your device storage.
-![Taking Note](https://raw.githubusercontent.com/evakok/memotube/edit/Final/images/takingNote.png)
+![Taking Note](images/takingNote.png)
 
 Click the pencil button to change the color or width of the pen.
-![Editor Button](https://raw.githubusercontent.com/evakok/memotube/edit/Final/images/editorButton.png)
+![Editor Button](images/editorButton.png)
 
 Slide from the left to open the bookmark list.
-![Bookmark List](https://raw.githubusercontent.com/evakok/memotube/edit/Final/images/bookmarkList.png)
+![Bookmark List](images/bookmarkList.png)
 
 Click on one bookmark item to view the memo on top of the video.
-![Displaying Memo](https://raw.githubusercontent.com/evakok/memotube/edit/Final/images/displayMemo.png)
+![Displaying Memo](images/displayMemo.png)
 
 ### Team members:
 * Hiyeon Kim - 118654

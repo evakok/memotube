@@ -57,7 +57,7 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
-    // Source: https://developer.android.com/guide/topics/providers/document-provider
+    // Code taken from the source: https://developer.android.com/guide/topics/providers/document-provider
     fun getFileName(uri: Uri): String {
         var result: String? = null
         if (uri.scheme == "content") {

@@ -33,10 +33,8 @@ class VideoActivity : AppCompatActivity() {
 
     private lateinit var listView : ListView
     private lateinit var fragment : BookmarkFragment
-    private var bookmarkShown = false
     private var fileUri = "DEMO"
 
-    private val TAG = "Debug"
     private var videoTitle = "DEMO"
     private var timestamp: Long = 0
     private lateinit var emptyBitmap : Bitmap
@@ -58,6 +56,7 @@ class VideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
 
+        // create a folder if it doesn't exist
         val storageDir = File(Environment.getExternalStorageDirectory(), "Memotube")
         if (!storageDir.exists()) {
             if (!storageDir.mkdirs()) {
@@ -73,10 +72,11 @@ class VideoActivity : AppCompatActivity() {
 
         //if you added fragment via layout xml
         fragment = fm.findFragmentById(R.id.drawer) as BookmarkFragment
-        fragment.setArguments(bundle)
+        fragment.arguments = bundle
         fragment.updateListview()
         listView = fragment.getListView()
 
+        // showing the selected bookmark item
         listView.setOnItemClickListener { parent, view, position, id ->
             playerView.useController = false
             val posToShow = fragment.getPlaybackPosition(position) as Long
@@ -105,7 +105,7 @@ class VideoActivity : AppCompatActivity() {
     private fun buildMediaSourceLocal(uri: Uri): MediaSource {
 
         val dataSpec = DataSpec(uri);
-        val fileDataSource = FileDataSource();
+        val fileDataSource = FileDataSource()
         try {
             fileDataSource.open(dataSpec);
         } catch (e:FileDataSource.FileDataSourceException) {
@@ -115,7 +115,7 @@ class VideoActivity : AppCompatActivity() {
         val factory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "idontknow"), DefaultBandwidthMeter())
 
         val videoSource = ExtractorMediaSource(uri,
-                factory, DefaultExtractorsFactory(), null, null);
+                factory, DefaultExtractorsFactory(), null, null)
 
         return videoSource
     }
@@ -150,14 +150,12 @@ class VideoActivity : AppCompatActivity() {
     }
 
     private fun addGestures () {
-        playerView.setOnTouchListener({ _, event ->
+        playerView.setOnTouchListener { _, event ->
             val pointerCount = event.pointerCount
             if (pointerCount > 1) { // pause with two finger pressed
-                timestamp = player.getCurrentPosition()
+                timestamp = player.currentPosition
                 if(!isNoteMode) { // prevent player to resume whlie it wasn't before
-                    if (player.getPlayWhenReady())
-                        wasPlaying = true
-                    else wasPlaying = false
+                    wasPlaying = player.playWhenReady
                     emptyBitmap = drawView.getBitmap()  // to find out if the canvas is empty
                 }
                 player.setPlayWhenReady(false)
@@ -166,6 +164,7 @@ class VideoActivity : AppCompatActivity() {
                 drawView.visibility = View.VISIBLE
                 playerView.hideController()
 
+                // editor button to change the pen's color and width
                 edit_btn.visibility = View.VISIBLE
                 edit_btn.setOnClickListener {
                     if (edit.visibility == View.VISIBLE && color_editor.visibility == View.VISIBLE ) {
@@ -207,9 +206,9 @@ class VideoActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                if(isNoteMode == true) {
+                if(isNoteMode) {
                     if(wasPlaying)
-                        player.setPlayWhenReady(true)
+                        player.playWhenReady = true
                     isNoteMode = false
                     drawView.visibility = View.INVISIBLE
                     edit_btn.visibility = View.INVISIBLE
@@ -224,25 +223,27 @@ class VideoActivity : AppCompatActivity() {
                 }
             }
             false
-        })
+        }
     }
 
+    // save the memo as bitmap
     fun saveBitmap(bitmap: Bitmap, timestamp: Long) {
         val fileName = "Memotube/" + videoTitle +  timestamp.toString() + ".png"
         val file = File(Environment.getExternalStorageDirectory(), fileName)
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(file))
     }
 
+    // show selected bookmark item
     fun showBookmark(pos: Long, path: String) {
         player.setPlayWhenReady(false)
         player.seekTo(pos)
         bookmarkView.setImageBitmap(BitmapFactory.decodeFile(path))
         bookmarkView.visibility=View.VISIBLE
         bookmarkClose.visibility=View.VISIBLE
-        bookmarkClose.setOnClickListener({
+        bookmarkClose.setOnClickListener {
             bookmarkView.visibility=View.INVISIBLE
             bookmarkClose.visibility=View.INVISIBLE
             playerView.useController = true
-        })
+        }
     }
 }

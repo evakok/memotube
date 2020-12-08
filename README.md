@@ -1,6 +1,6 @@
 # MemoTube
 MemoTube is a video player app that allows users to take notes while they are watching a video.
-It works on Android version 4.4 (Kitkat) or above. It was designed for and tested on 9.6 inch tablet(Samsung Galaxy Tab E SM-T560).
+It works on Android version 4.4 (Kitkat) or above. It was designed for and tested on 9.6 inch tablet(Samsung Galaxy Tab E SM-T560). For more, see our <a href="https://github.com/evakok/memotube/blob/Final/report-memotube.pdf">documentation</a>.
 
 # How to use
 Install with APK file. Upon opening, first choose a video file to play. You can either select what is stored on the device, or simply select the demo video. Make sure the device is connected to the internet to play the demo.

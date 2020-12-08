@@ -21,6 +21,9 @@ Slide from the left to open the bookmark list.
 Click on one bookmark item to view the memo on top of the video.
 ![Displaying Memo](images/displayMemo.png)
 
+## DEMO Video
+![Demo](https://github.com/evakok/memotube/blob/Final/demo.gif)]
+
 ### Team members:
 * Hiyeon Kim - 118654
 * Evangelia Eirini Koktsidou - 118884
